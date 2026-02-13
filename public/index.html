@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenCredits - Clean Tomorrow, Powered by You</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=2.0">
+    <style>
+        /* 🗺️ CUSTOM MAP LEGEND */
+        .info.legend {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .info.legend i {
+            width: 12px;
+            height: 12px;
+            float: left;
+            margin-right: 8px;
+            margin-top: 3px;
+            opacity: 1;
+            border-radius: 50%;
+        }
+
+        /* 🟢 CUSTOM CLUSTER ICONS */
+        .custom-cluster {
+            background-color: rgba(34, 197, 94, 0.9);
+            /* Green-ish base */
+            border-radius: 50%;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .custom-cluster-medium {
+            background-color: rgba(249, 115, 22, 0.9);
+            /* Orange */
+        }
+
+        .custom-cluster-large {
+            background-color: rgba(239, 68, 68, 0.9);
+            /* Red */
+        }
+    </style>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <!-- Leaflet MarkerCluster CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+
+
+
+</head>
+
+<body>
+
+    <!-- STICKY HEADER -->
+    <header class="site-header" id="siteHeader">
+        <div class="container">
+            <div class="header-inner">
+                <div class="logo">
+                    <span class="logo-icon">🌿</span>
+                    <span class="logo-text">GreenCredits</span>
+                </div>
+
+                <nav class="main-nav">
+                    <a href="#features" class="nav-link">Features</a>
+                    <a href="#journey" class="nav-link">How It Works</a>
+                    <a href="#impact" class="nav-link">Impact</a>
+                    <a href="#leaderboard" class="nav-link">Leaderboard</a>
+                </nav>
+
+                <div class="header-actions">
+                    <!-- Before Login -->
+                    <div id="authButtons" class="auth-buttons">
+                        <button id="loginBtn" class="btn-outline">Login</button>
+                        <button id="signupBtn" class="btn-primary">Sign Up</button>
+                    </div>
+
+                    <!-- After Login -->
+                    <div id="userWelcome" class="user-welcome hidden"></div>
+                </div>
+
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Clean Tomorrow, Powered by You</h1>
+                <p class="hero-subtitle">Report waste hotspots, track action, and earn rewards — citizens and cities
+                    working together for cleaner streets</p>
+                <div class="hero-buttons">
+                    <button onclick="document.getElementById('signupBtn').click()" class="btn-primary btn-large">Get
+                        Started</button>
+                    <button onclick="scrollToSection('journey')" class="btn-outline btn-large">Learn More</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero Background Animation -->
+        <div class="hero-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+    </section>
+
+    <!-- KEY HIGHLIGHTS -->
+    <section class="highlights-section" id="features">
+        <div class="container">
+            <h2 class="section-title">Why GreenCredits?</h2>
+            <p class="section-subtitle">Transforming waste management through citizen participation</p>
+
+            <div class="highlights-grid">
+                <div class="highlight-card">
+                    <div class="highlight-icon">📍</div>
+                    <h3>Report Instantly</h3>
+                    <p>Snap a photo, add location, and submit waste reports in seconds with GPS tagging</p>
+                </div>
+
+                <div class="highlight-card">
+                    <div class="highlight-icon">🎮</div>
+                    <h3>Earn Rewards</h3>
+                    <p>Get credits for every report, unlock badges, and climb the leaderboard</p>
+                </div>
+
+                <div class="highlight-card">
+                    <div class="highlight-icon">📊</div>
+                    <h3>Track Progress</h3>
+                    <p>Watch your impact grow with real-time updates on report resolutions</p>
+                </div>
+
+                <div class="highlight-card">
+                    <div class="highlight-icon">🏆</div>
+                    <h3>Community Impact</h3>
+                    <p>Join thousands making a difference in waste management across India</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- YOUR JOURNEY (REDESIGNED - HORIZONTAL RESPONSIVE) -->
+    <section class="journey-section" id="journey">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">Three simple steps to make a difference</p>
+
+            <div class="journey-steps">
+                <div class="journey-step">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">📸</div>
+                    <h3>Capture</h3>
+                    <p>Snap a photo of the waste hotspot with automatic GPS tagging</p>
+                </div>
+
+                <div class="journey-connector">→</div>
+
+                <div class="journey-step">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">📝</div>
+                    <h3>Submit</h3>
+                    <p>Send it with a short note — our system validates the report instantly</p>
+                </div>
+
+                <div class="journey-connector">→</div>
+
+                <div class="journey-step">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">🎯</div>
+                    <h3>Track</h3>
+                    <p>Watch progress, earn credits, and get badges as reports are resolved</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- COMMUNITY IMPACT SECTION (NEW) -->
+    <section class="impact-section" id="impact">
+        <div class="container">
+            <h2 class="section-title">Our Impact on Communities</h2>
+            <p class="section-subtitle">Real change through citizen participation</p>
+
+            <!-- HEATMAP CONTAINER -->
+            <div id="impactMap"
+                style="height: 500px; width: 100%; margin: 30px 0; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); z-index: 1;">
+            </div>
+
+            <div class="impact-grid">
+                <div class="impact-stat">
+                    <div class="stat-number" id="impactReports">10,000+</div>
+                    <div class="stat-label">Reports Submitted</div>
+                </div>
+
+                <div class="impact-stat">
+                    <div class="stat-number" id="impactUsers">5,000+</div>
+                    <div class="stat-label">Active Citizens</div>
+                </div>
+
+                <div class="impact-stat">
+                    <div class="stat-number" id="impactResolved">7,500+</div>
+                    <div class="stat-label">Issues Resolved</div>
+                </div>
+
+                <div class="impact-stat">
+                    <div class="stat-number" id="impactCities">50+</div>
+                    <div class="stat-label">Cities Covered</div>
+                </div>
+            </div>
+
+            <div class="impact-description">
+                <h3>Transforming Waste Management in India 🇮🇳</h3>
+                <p>GreenCredits bridges the gap between citizens and municipalities, creating a transparent system where
+                    every voice matters. Our gamification approach motivates continuous participation while providing
+                    municipalities with real-time data to optimize waste management operations.</p>
+
+                <div class="impact-features">
+                    <div class="impact-feature">
+                        <span class="feature-icon">✅</span>
+                        <span>Faster response times to waste issues</span>
+                    </div>
+                    <div class="impact-feature">
+                        <span class="feature-icon">✅</span>
+                        <span>Data-driven municipal planning</span>
+                    </div>
+                    <div class="impact-feature">
+                        <span class="feature-icon">✅</span>
+                        <span>Increased citizen engagement</span>
+                    </div>
+                    <div class="impact-feature">
+                        <span class="feature-icon">✅</span>
+                        <span>Transparent accountability system</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LEADERBOARD SECTION -->
+    <section class="leaderboard-section" id="leaderboard">
+        <div class="container">
+            <h2 class="section-title">Top Contributors 🏆</h2>
+            <p class="section-subtitle">Meet our community champions making a real difference</p>
+
+            <div id="leaderboardContainer" class="leaderboard-container">
+                <div class="loader">Loading leaderboard...</div>
+            </div>
+
+            <div class="leaderboard-info">
+                <h3>How to Climb the Leaderboard</h3>
+                <ul class="climb-list">
+                    <li>📸 Submit waste reports with photos (+10 credits)</li>
+                    <li>📍 Include GPS location (+5 credits)</li>
+                    <li>✍️ Write detailed descriptions (+5 credits)</li>
+                    <li>✅ Get reports verified by admin (+20 credits)</li>
+                    <li>🎯 Complete weekly challenges (+50 credits)</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- LOGGED-IN USER DASHBOARD -->
+    <div class="user-dashboard logged-in-only" style="display: none;">
+        <div class="container">
+            <div class="dashboard-nav">
+                <button class="tab-btn active" data-tab="reportIssue">📍 Report Issue</button>
+                <button class="tab-btn" data-tab="myReports">📋 My Reports</button>
+                <button class="tab-btn" data-tab="credits">💰 My Credits</button>
+                <button class="tab-btn" data-tab="rewards">🎁 Rewards Store</button>
+            </div>
+
+            <!-- Report Issue Tab -->
+            <div id="reportIssueSection" class="tab-content">
+                <div class="dashboard-card">
+                    <h2>Report a Waste Issue</h2>
+                    <p class="card-subtitle">Help keep your community clean. Earn credits for every report!</p>
+
+                    <form id="reportForm" class="report-form">
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="reportDescription">Description *</label>
+                                <textarea id="reportDescription" name="description" rows="4"
+                                    placeholder="Describe the waste issue in detail..." required
+                                    minlength="10"></textarea>
+                                <small>Minimum 10 characters. Be specific for more credits!</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Upload Photo</label>
+                                <div class="photo-upload-group" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                    <!-- Hidden File Input Container -->
+                                    <div style="height: 0; width: 0; overflow: hidden; opacity: 0;">
+                                        <input type="file" id="photoInput" name="photo" accept="image/*">
+                                    </div>
+
+                                    <!-- Custom Buttons -->
+                                    <button type="button" onclick="document.getElementById('photoInput').click()"
+                                        class="btn-outline"
+                                        style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px;">
+                                        📂 Upload From Gallery
+                                    </button>
+
+                                    <button type="button" id="startCameraBtn" class="btn-primary"
+                                        style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px;">
+                                        📷 Take Photo
+                                    </button>
+                                </div>
+                                <small style="display: block; margin-bottom: 5px; color: #6b7280;">+10 credits for
+                                    including a photo</small>
+
+                                <!-- 📸 PREVIEW & AI STATUS -->
+                                <div id="imagePreviewContainer" style="margin-top: 10px;">
+                                    <img id="photoPreview"
+                                        style="max-width: 100%; border-radius: 8px; display: none; border: 2px solid #e5e7eb; max-height: 200px; object-fit: cover;">
+                                </div>
+                                <div id="aiStatus"
+                                    style="margin-top: 10px; display: none; padding: 10px; background: #f0fdf4; border-left: 4px solid #22c55e; border-radius: 4px; font-size: 0.9rem;">
+                                </div>
+
+                                <input type="hidden" name="aiTags" id="aiTags">
+                                <input type="hidden" name="aiConfidence" id="aiConfidence">
+                            </div>
+
+
+
+                            <div class="form-group">
+                                <label for="wasteCategory">Waste Category *</label>
+                                <select id="wasteCategory" name="category" required>
+                                    <option value="">-- Select Category --</option>
+                                    <option value="organic">🍃 Organic/Wet Waste (+10 credits)</option>
+                                    <option value="plastic">♻️ Plastic Waste (+10 credits)</option>
+                                    <option value="ewaste">⚡ E-Waste (+15 credits)</option>
+                                    <option value="hazardous">☢️ Hazardous Waste (+20 credits)</option>
+                                    <option value="construction">🏗️ Construction Debris (+15 credits)</option>
+                                    <option value="other">📦 Other Waste (+5 credits)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="wasteSize">Waste Size</label>
+                                <select id="wasteSize">
+                                    <option value="">-- Choose Size --</option>
+                                    <option value="small">Small (Garbage bag size)</option>
+                                    <option value="medium">Medium (Pushcart size)</option>
+                                    <option value="large">Large (Truck load)</option>
+                                    <option value="massive">Massive (Multiple trucks)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label for="locationInput">Location</label>
+                                <div class="location-input-group">
+                                    <input type="text" id="locationInput" name="address"
+                                        placeholder="Enter address or use GPS">
+                                    <button type="button" id="useLocationBtn" class="btn-location">
+                                        📍 Use My Location (+5 credits)
+                                    </button>
+                                </div>
+                                <small>Adding location helps municipalities respond faster</small>
+                                <!-- Debug / Manual GPS Override -->
+                                <div style="display: flex; gap: 5px; margin-top: 5px;">
+                                    <input type="number" step="any" id="manualLat" placeholder="Lat"
+                                        style="width: 80px; font-size: 0.8rem; display:none;">
+                                    <input type="number" step="any" id="manualLng" placeholder="Lng"
+                                        style="width: 80px; font-size: 0.8rem; display:none;">
+                                    <button type="button" onclick="toggleManualGPS()"
+                                        style="background:none; border:none; color:#9fa6b2; font-size: 0.8rem; cursor:pointer;">🛠️</button>
+                                </div>
+                                <script>
+                                    function toggleManualGPS() {
+                                        const lat = document.getElementById('manualLat');
+                                        const lng = document.getElementById('manualLng');
+                                        if (lat.style.display === 'none') {
+                                            lat.style.display = 'block';
+                                            lng.style.display = 'block';
+                                        } else {
+                                            lat.style.display = 'none';
+                                            lng.style.display = 'none';
+                                        }
+                                    }
+                                </script>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary btn-large">
+                                Submit Report & Earn Credits
+                            </button>
+                            <button type="button" onclick="document.getElementById('reportForm').reset()"
+                                class="btn-outline">
+                                Clear Form
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- My Reports Tab -->
+            <div id="myReportsSection" class="tab-content hidden">
+                <div class="dashboard-card">
+                    <h2>My Reports</h2>
+                    <div id="myReportsContainer">
+                        <div class="loader">Loading your reports...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Credits Tab -->
+            <div id="creditsSection" class="tab-content hidden">
+                <div class="dashboard-card">
+                    <h2>My Credits & Badges</h2>
+                    <!-- ✅ ADD STREAK WIDGET HERE -->
+                    <div id="creditsLoadingState">
+                        <div class="loader">Loading your financial profile...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Rewards Store Tab -->
+    <div id="rewardsSection" class="tab-content hidden">
+        <div class="dashboard-card">
+            <h2>🎁 Rewards Store</h2>
+            <p class="card-subtitle">Spend your hard-earned credits on amazing rewards!</p>
+
+            <div class="rewards-balance">
+                <div class="balance-card">
+                    <div class="balance-icon">💰</div>
+                    <div class="balance-info">
+                        <span class="balance-label">Available Credits</span>
+                        <span class="balance-amount" id="rewardsBalance">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rewards-categories">
+                <button class="category-btn active" data-category="all">All Rewards</button>
+                <button class="category-btn" data-category="vouchers">🎫 Vouchers</button>
+                <button class="category-btn" data-category="products">📦 Products</button>
+                <button class="category-btn" data-category="donations">❤️ Donations</button>
+                <button class="category-btn" data-category="services">🔧 Services</button>
+            </div>
+
+            <div id="rewardsGrid" class="rewards-grid">
+                <div class="loader">Loading rewards...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA SECTION -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Make a Difference?</h2>
+            <p>Join thousands of citizens creating cleaner communities across India</p>
+            <button onclick="document.getElementById('signupBtn').click()" class="btn-primary btn-large">
+                Get Started Today
+            </button>
+
+            <!-- APP STORE BUTTONS (FIXED WITH ICONS) -->
+            <div class="app-download">
+                <p>Download our mobile app</p>
+                <div class="app-buttons">
+                    <a href="#" class="app-btn google-play">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z" />
+                        </svg>
+                        <div>
+                            <small>GET IT ON</small>
+                            <strong>Google Play</strong>
+                        </div>
+                    </a>
+                    <a href="#" class="app-btn app-store">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M18.71,19.5C17.88,20.74 17,21.95 15.66,21.97C14.32,22 13.89,21.18 12.37,21.18C10.84,21.18 10.37,21.95 9.1,22C7.79,22.05 6.8,20.68 5.96,19.47C4.25,17 2.94,12.45 4.7,9.39C5.57,7.87 7.13,6.91 8.82,6.88C10.1,6.86 11.32,7.75 12.11,7.75C12.89,7.75 14.37,6.68 15.92,6.84C16.57,6.87 18.39,7.1 19.56,8.82C19.47,8.88 17.39,10.1 17.41,12.63C17.44,15.65 20.06,16.66 20.09,16.67C20.06,16.74 19.67,18.11 18.71,19.5M13,3.5C13.73,2.67 14.94,2.04 15.94,2C16.07,3.17 15.6,4.35 14.9,5.19C14.21,6.04 13.07,6.7 11.95,6.61C11.8,5.46 12.36,4.26 13,3.5Z" />
+                        </svg>
+                        <div>
+                            <small>DOWNLOAD ON THE</small>
+                            <strong>App Store</strong>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER (REDESIGNED & WORKING) -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <span class="logo-icon">🌿</span>
+                        <span class="logo-text">GreenCredits</span>
+                    </div>
+                    <p>Empowering citizens to create cleaner, greener communities through technology and gamification.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://twitter.com/greencredits" target="_blank" aria-label="Twitter">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M22.46,6C21.69,6.35 20.86,6.58 20,6.69C20.88,6.16 21.56,5.32 21.88,4.31C21.05,4.81 20.13,5.16 19.16,5.36C18.37,4.5 17.26,4 16,4C13.65,4 11.73,5.92 11.73,8.29C11.73,8.63 11.77,8.96 11.84,9.27C8.28,9.09 5.11,7.38 3,4.79C2.63,5.42 2.42,6.16 2.42,6.94C2.42,8.43 3.17,9.75 4.33,10.5C3.62,10.5 2.96,10.3 2.38,10C2.38,10 2.38,10 2.38,10.03C2.38,12.11 3.86,13.85 5.82,14.24C5.46,14.34 5.08,14.39 4.69,14.39C4.42,14.39 4.15,14.36 3.89,14.31C4.43,16 6,17.26 7.89,17.29C6.43,18.45 4.58,19.13 2.56,19.13C2.22,19.13 1.88,19.11 1.54,19.07C3.44,20.29 5.70,21 8.12,21C16,21 20.33,14.46 20.33,8.79C20.33,8.6 20.33,8.42 20.32,8.23C21.16,7.63 21.88,6.87 22.46,6Z" />
+                            </svg>
+                        </a>
+                        <a href="https://facebook.com/greencredits" target="_blank" aria-label="Facebook">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96A10 10 0 0 0 22 12.06C22 6.53 17.5 2.04 12 2.04Z" />
+                            </svg>
+                        </a>
+                        <a href="https://instagram.com/greencredits" target="_blank" aria-label="Instagram">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#journey">How It Works</a></li>
+                        <li><a href="#impact">Impact</a></li>
+                        <li><a href="#leaderboard">Leaderboard</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <ul class="footer-links">
+
+                        <li><a href="#">API Documentation</a></li>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Community Guidelines</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Partners</h4>
+                    <ul class="footer-links">
+                        <li><a href="/officer-login.html" target="_blank">Officer Login</a></li>
+                        <li><a href="/worker-login.html" target="_blank">Worker Login</a></li>
+                        <li><a href="/super-admin-login.html" target="_blank">Super Admin</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 GreenCredits. All rights reserved. Made with 💚 for a cleaner India.</p>
+                <p class="viksit-bharat">🇮🇳 Part of Viksit Bharat Initiative</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- LOGIN MODAL -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Welcome Back!</h2>
+                <button class="modal-close" onclick="closeModal('loginModal')">&times;</button>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="your@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                        <span class="toggle-password"
+                            onclick="togglePasswordVisibility('loginPassword', this)">👁️</span>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary btn-large">Login</button>
+            </form>
+            <p class="modal-footer">
+                Don't have an account?
+                <a href="#" onclick="closeModal('loginModal'); document.getElementById('signupBtn').click()">Sign up</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- SIGNUP MODAL -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create Account</h2>
+                <button class="modal-close" onclick="closeModal('signupModal')">&times;</button>
+            </div>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" placeholder="your@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="signupPassword" placeholder="At least 6 characters" required
+                            minlength="6">
+                        <span class="toggle-password"
+                            onclick="togglePasswordVisibility('signupPassword', this)">👁️</span>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary btn-large">Sign Up</button>
+            </form>
+            <p class="modal-footer">
+                Already have an account?
+                <a href="#" onclick="closeModal('signupModal'); document.getElementById('loginBtn').click()">Login</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- CAMERA MODAL -->
+    <div id="cameraModal" class="modal">
+        <div class="modal-content" style="max-width: 500px; width: 95%; text-align: center;">
+            <span class="close-btn" onclick="closeModal('cameraModal')">&times;</span>
+            <h2>📷 Take Photo</h2>
+
+            <div
+                style="position: relative; width: 100%; background: black; border-radius: 10px; overflow: hidden; aspect-ratio: 4/3;">
+                <video id="cameraFeed" autoplay playsinline
+                    style="width: 100%; height: 100%; object-fit: cover;"></video>
+                <canvas id="cameraCanvas" style="display: none;"></canvas>
+            </div>
+
+            <div style="margin-top: 20px; display: flex; justify-content: center; gap: 15px;">
+                <button id="captureBtn" class="btn-primary btn-large" style="min-width: 150px;">
+                    Capture
+                </button>
+                <button onclick="closeModal('cameraModal')" class="btn-outline">
+                    Cancel
+                </button>
+            </div>
+
+            <div style="margin-top: 10px; display: flex; justify-content: center;">
+                <button id="switchCameraBtn" class="btn-text" style="color: #666; font-size: 0.9rem; display: none;">
+                    🔄 Switch Camera
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🧠 AI BRAIN: TensorFlow.js & MobileNet -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0/dist/mobilenet.min.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        window.socket = io();
+        socket.on('connect', () => {
+            console.log('✅ Socket connected:', socket.id);
+        });
+        socket.on('connect_error', (err) => {
+            console.error('❌ Socket connection error:', err);
+        });
+    </script>
+    <!-- Main Logic -->
+    <script src="script.js?v=2.2"></script>
+</body>
+
+</html>
