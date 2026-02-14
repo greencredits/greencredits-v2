@@ -100,7 +100,23 @@ if (!process.env.MONGODB_URI) {
 }
 
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('✅ MongoDB Connected'))
+  .then(async () => {
+    console.log('✅ MongoDB Connected');
+
+    // 🛡️ AUTO-SEED: Check if admins exist, if not, create default accounts
+    try {
+      const adminCount = await Admin.countDocuments();
+      if (adminCount === 0) {
+        console.log('🌱 Database appears empty. Auto-seeding default accounts...');
+        await setupAccountsInternal();
+        console.log('✨ Auto-seeding complete!');
+      } else {
+        console.log('👌 Database already initialized.');
+      }
+    } catch (err) {
+      console.error('⚠️ Auto-seed check failed:', err);
+    }
+  })
   .catch(err => console.error('❌ MongoDB Connection Error:', err));
 
 // Create uploads directory
