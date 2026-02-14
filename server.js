@@ -58,6 +58,23 @@ app.post('/api/admin/reject-report', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
+
+// ==========================================
+// 🛠️ DATABASE SETUP ROUTE (Run once)
+// ==========================================
+import { setupAccountsInternal } from './setup-accounts.js'; // You need to export this function
+app.get('/api/setup-db', async (req, res) => {
+  try {
+    if (req.query.secret !== 'green2025setup') {
+      return res.status(403).json({ error: 'Unauthorized' });
+    }
+    await setupAccountsInternal();
+    res.json({ success: true, message: 'Database seeded successfully! You can now login.' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // Server start moved to bottom
 
 // ⭐ DEPLOYMENT FIX: Trust proxy for Render

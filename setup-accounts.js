@@ -10,7 +10,7 @@ async function setupAccounts() {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log('✅ MongoDB Connected');
-    
+
     // Clear existing
     await Admin.deleteMany({});
     await Worker.deleteMany({});
@@ -56,17 +56,28 @@ async function setupAccounts() {
         approvedDate: new Date()
       }
     ]);
-    
+
     console.log('\n🎉 SETUP COMPLETE!\n');
     console.log('1️⃣  SUPER ADMIN: cmo@gonda.gov.in / SuperAdmin2025');
     console.log('2️⃣  OFFICER:     officer1@gonda.gov.in / Officer@123');
     console.log('3️⃣  WORKER:      9999999991 / Worker@123\n');
-    
-    process.exit(0);
+
+    // Only exit if run directly
+    if (import.meta.url === `file://${process.argv[1]}`) {
+      process.exit(0);
+    }
   } catch (error) {
     console.error('❌ Setup error:', error);
-    process.exit(1);
+    if (import.meta.url === `file://${process.argv[1]}`) {
+      process.exit(1);
+    }
+    throw error; // Re-throw for API route
   }
 }
 
-setupAccounts();
+export { setupAccounts as setupAccountsInternal };
+
+// Run if called directly
+if (import.meta.url === `file://${process.argv[1]}`) {
+  setupAccounts();
+}

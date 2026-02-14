@@ -33,65 +33,74 @@ Since you need a free database, we will use MongoDB Atlas.
 
 ---
 
-## Part 2: Prepare Your Code (I have done this)
+## Part 2: Upload Your Code (Drag & Drop Method)
 
-I have already added two files to your project to make this easy:
-1.  `Procfile`: Tells Render how to start your app.
-2.  `render.yaml`: Configures the server settings.
+Since Git is not fully configured on your PC, we will **upload the files manually via the browser**. This is the easiest way.
 
 **Action Required**:
-1.  **Check your Git Remote**:
-    Your current remote is: `https://github.com/greencredits/green.git`
-    
-    *If you own this repository*, just run:
-    ```bash
-    git push origin main
-    ```
+1.  **Create a New Repository**:
+    *   Go to [GitHub.com/new](https://github.com/new).
+    *   **Name**: `greencredits-v2`.
+    *   Select **Public**.
+    *   **Check** "Add a README file" (This is important for the upload button to appear).
+    *   Click **Create repository**.
 
-    *If you do NOT own this repository* (e.g. you downloaded it), verify you have your own GitHub repository:
-    1. Create a new repository on GitHub.
-    2. Run these commands in your terminal:
-    ```bash
-    git remote set-url origin <YOUR_NEW_REPO_URL>
-    git push -u origin main
-    ```
+2.  **Upload Files**:
+    *   In your new repository, click **Add file** > **Upload files**.
+    *   **Drag and drop** all the files from your `greencredits_updated-main` folder into the browser window.
+        *   *(Tip: Open your folder, press Ctrl+A to select all, then drag them in).*
+        *   **Important**: Do NOT upload the `node_modules` folder if you see it. It's too big and unnecessary.
+    *   Wait for the files to upload.
+    *   Scroll down, name the commit "Initial upload", and click **Commit changes**.
+
+Your code is now on GitHub! 🎉
 
 ---
 
 ## Part 3: Deploy to Render
 
 1.  **Create Render Account**: Go to [dashboard.render.com](https://dashboard.render.com/) and log in with GitHub.
-2.  **New Web Service**:
-    *   Click **New +** -> **Web Service**.
-    *   Connect your **GitHub repository**.
-3.  **Configure**:
-    *   **Name**: `greencredits-app` (or whatever you like).
-    *   **Region**: Closest to you (e.g., Singapore).
-    *   **Branch**: `main` (or master).
-    *   **Runtime**: `Node`.
+2.  **New Web Service**: Click **New +** -> **Web Service**.
+3.  **Connect GitHub**: Select your `greencredits-v2` repository.
+4.  **Settings**:
+    *   **Runtime**: `Node`
     *   **Build Command**: `npm install`
-    *   **Start Command**: `npm start`
-    *   **Instance Type**: **Free**.
-4.  **Environment Variables (Crucial!)**:
-    Scroll down to "Environment Variables" and add these:
-
-    | Key | Value |
-    | :--- | :--- |
-    | `MONGODB_URI` | *Paste your MongoDB connection string from Part 1* |
-    | `NODE_ENV` | `production` |
-    | `JWT_SECRET` | *Type a random secret key (e.g., `mySecretKey123`)* |
-    | `SESSION_SECRET` | *Type another random secret key* |
-
-5.  **Deploy**:
-    *   Click **Create Web Service**.
-    *   Render will start building your app. This takes 2-3 minutes.
+    *   **Start Command**: `node server.js`
+    *   **Instance Type**: Free
+5.  **Environment Variables**:
+    *   `MONGODB_URI`: *Paste your connection string*
+    *   `NODE_ENV`: `production`
+    *   `JWT_SECRET`: `randomkey`
+    *   `SESSION_SECRET`: `randomkey`
+6.  Click **Deploy**.
 
 ---
 
-## 🎉 Success!
-Once the deployment finishes, Render will verify the service is live. You will see a URL like `https://greencredits-app.onrender.com`.
+## Part 4: Initialize Database (CRITICAL STEP) 🛠️
 
-### ⚠️ Important Limitations of Free Tier
-1.  **Spin Down**: If no one visits your site for 15 minutes, the server "sleeps". The next person to visit will wait ~30 seconds for it to wake up.
-2.  **File Uploads**: Files uploaded to `uploads/` **will be lost** when the server restarts or sleeps.
-    *   *Solution*: For a real production app, you need to switch to cloud storage (like AWS S3 or Cloudinary) for handling image uploads.
+Once your app is "Live", you need to create the default accounts.
+
+1.  **Open your deployed App URL** (e.g., `https://greencredits-app.onrender.com`).
+2.  **Add this to the end of the URL**:
+    `/api/setup-db?secret=green2025setup`
+    
+    Full URL example:
+    `https://greencredits-app.onrender.com/api/setup-db?secret=green2025setup`
+
+3.  Hit **Enter**. You should see: `{"success":true,"message":"Database seeded..."}`.
+
+---
+
+## 🔑 Default Logins
+
+**Super Admin**
+*   **Email**: `cmo@gonda.gov.in`
+*   **Password**: `SuperAdmin2025`
+
+**Zone Officer**
+*   **Email**: `officer1@gonda.gov.in`
+*   **Password**: `Officer@123`
+
+**Worker**
+*   **Mobile**: `9999999991`
+*   **Password**: `Worker@123`
